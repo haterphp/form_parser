@@ -1,6 +1,6 @@
 'use strict';
 
-import { plural } from "./utils.js";
+import { StringToBool } from "./utils.js";
 
 export class Field{
     constructor(options){
@@ -8,14 +8,7 @@ export class Field{
         
         this.id = options.id;
         this.label = options.field.label || null;
-        this.type = options.field.input.type || 'text';
-        this.required = options.field.input.required || false;
-        this.checked = options.field.input.checked || false;
-        this.placeholder = options.field.input.placeholder || null;
-        this.mask = options.field.input.mask || null;
-        this.multiple = options.field.input.multiple || false;
-        this.filetype = options.field.input.filetype || null;
-        this[plural(this.type)] = options.field.input[plural(this.type)] || null;
+        this.input = options.field.input;
 
         this._init_();
     }
@@ -30,22 +23,38 @@ export class Field{
     }
 
     create(){
-        const {type, label, types, container, id} = this;
-        const formGroup = $(`<div class="form-group"></div>`)
+        const {container, label, input, id, types} = this;
+        const type = input.type;
+        const formGroup = $('<div/>',{'class': (type === 'checkbox') ? 'custom-control custom-checkbox' : 'form-group'}).appendTo(container);
 
-        if(label) formGroup.append(`<label for="input__${id}">${label}</label>`)
+        if(label) formGroup.append(`<label for="input__${id}" class="${type === 'checkbox' ? 'custom-control-label' : ''}">${label}</label>`);
 
-        if(types.includes(type)){
-            this.field = $(`<input type="${type}" id="input__${id}" class="form-control">`);
-        }
-        else if(this.type === 'textarea'){
-            this.field = $(`<textarea id="input__${id}" class="form-control"></textarea>`);
+        if(types.includes(type)) {
+            const classes = {
+                'file' : 'form-control-file',
+                'checkbox' : 'custom-control-input'
+            }
+            
+            this.field = $('<input/>')
+                .attr('class', (['file', 'checkbox'].includes(type)) ? classes[type] : 'form-control');
+            
+            for(let name in input){
+                if(name == 'checked') input['checked'] = StringToBool(input['checked']); 
+                this.field.attr(name, input[name])
+            }
+        }   
+        else if(type === 'textarea') this.field = $('<textarea/>')
+        else this.field = $('<select/>')
+        
+        this.field
+            .attr('id', `input__${id}`)
+            .attr('name', `input_name__${id}`);
+
+        if(type !== 'checkbox'){
+            formGroup.append(this.field);
         }
         else{
-            this.field = $(`<select id="input__${id}" class="form-control"></select>`);
+            $(`label[for="input__${id}"]`).before(this.field);
         }
-
-        formGroup.append(this.field);
-        container.append(formGroup)
     }
 }
