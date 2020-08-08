@@ -7,6 +7,8 @@ export class Form {
     constructor(options) {
         this.container = options.container;
 
+        this.types = options.types;
+
         this.name = options.form.name || "Unnamed";
         this.buttons = options.form.buttons || null;
         this.fields = options.form.fields || null;
@@ -39,11 +41,14 @@ export class Form {
             (_, i) => new Field({
                 container,
                 field: fields[i],
-                id: i
+                id: i,
+                types: this.types
             }))
     }
 
-    createButtons(){}
+    createButtons(){
+      
+    }
 
     createReferences(){}
 

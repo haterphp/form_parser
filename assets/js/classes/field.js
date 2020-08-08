@@ -1,6 +1,6 @@
 'use strict';
 
-import { StringToBool } from "./utils.js";
+import { StringToBool, plural } from "./utils.js";
 
 export class Field{
     constructor(options){
@@ -10,16 +10,9 @@ export class Field{
         this.label = options.field.label || null;
         this.input = options.field.input;
 
-        this._init_();
-    }
+        this.types = options.types;
 
-    async _init_(){
-        this.types = await this.getTypes();
         this.create();
-    }
-
-    async getTypes(){
-        return await fetch('assets/json/database/types.json').then(res => res.json());
     }
 
     create(){
@@ -29,32 +22,58 @@ export class Field{
 
         if(label) formGroup.append(`<label for="input__${id}" class="${type === 'checkbox' ? 'custom-control-label' : ''}">${label}</label>`);
 
-        if(types.includes(type)) {
-            const classes = {
-                'file' : 'form-control-file',
-                'checkbox' : 'custom-control-input'
-            }
+        if(types.includes(type)) this.field = $('<input/>');   
+        else if(type === 'textarea') this.field = $('<textarea/>');
+        else this.field = $('<select/>');
+
+        if(input[plural(type)]){
+            let select_container = this.field;
             
-            this.field = $('<input/>')
-                .attr('class', (['file', 'checkbox'].includes(type)) ? classes[type] : 'form-control');
-            
-            for(let name in input){
-                if(name == 'checked') input['checked'] = StringToBool(input['checked']); 
-                this.field.attr(name, input[name])
+            if(['color'].includes(type)){
+                select_container = $(`<datalist id="colorList__${id}" />`).appendTo(formGroup);
+                this.field
+                    .attr('list', `colorList__${id}`)
+                    .attr('value', input[plural(type)][0]);
             }
-        }   
-        else if(type === 'textarea') this.field = $('<textarea/>')
-        else this.field = $('<select/>')
-        
+
+            input[plural(type)].forEach(e => $(`<option value="${e}" label="${e}" />`).appendTo(select_container))
+        }
+
+        const classes = {
+            'file' : 'form-control-file',
+            'checkbox' : 'custom-control-input'
+        }
+
+        const attrs = {
+            'filetype' : 'accept'
+        }
+
         this.field
             .attr('id', `input__${id}`)
-            .attr('name', `input_name__${id}`);
+            .attr('name', `input_name__${id}`)
+            .attr('class', (Object.keys(classes).includes(type)) ? classes[type] : 'form-control');
 
+        for(let name in input){
+            if(name == 'checked') 
+                input['checked'] = StringToBool(input['checked']);
+
+            if(name == 'filetype')
+                input['filetype'] = input.filetype.map(e => `image/${e}`);
+
+            if(name != plural(type))
+                this.field.attr((Object.keys(attrs).includes(name)) ? attrs[name] : name, input[name])
+        }
+        
         if(type !== 'checkbox'){
             formGroup.append(this.field);
         }
         else{
             $(`label[for="input__${id}"]`).before(this.field);
         }
+
+        if(input['mask'])
+            this.field
+                .attr('type', 'text')
+                .mask(input['mask']);
     }
 }

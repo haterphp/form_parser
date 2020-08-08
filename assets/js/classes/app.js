@@ -15,8 +15,14 @@ export class App{
 
     async _init_(){
         this.forms = await this.getForms();
+        this.types = await this.getTypes();
         await this.createOptions();
         this.updateForm();
+    }
+
+    
+    async getTypes(){
+        return await fetch('assets/json/database/types.json').then(res => res.json());
     }
 
     async getForms(){
@@ -37,7 +43,8 @@ export class App{
         if(this.form) this.form.remove(); 
         this.form = new Form({
             form: this.forms[this.selectedForm],
-            container: this.$form__container
+            container: this.$form__container,
+            types: this.types
         });
     }
 }
