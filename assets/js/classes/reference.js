@@ -28,6 +28,6 @@ export class Reference{
             return true;
         }
 
-        refContainer.append($(`<a href="${ref.ref}">${ref.text}</a>`));
+        refContainer.append($(`<span>${ref['text without ref'] || ''} <a href="${ref.ref}">${ref.text}</a></span>`));
     }
 }
