@@ -116,7 +116,7 @@
         {
             "text":"Cancel",
             "type":"Reset",
-            "className":"btn"
+            "className":"btn btn-link"
         }
     ]
 }

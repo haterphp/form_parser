@@ -1,5 +1,3 @@
-'use strict';
-
 import {App} from './classes/app.js';
 
 const options = {
@@ -15,5 +13,3 @@ const options = {
 };
 
 window.app = new App(options);
-
-console.log() = console.error() = () => {}

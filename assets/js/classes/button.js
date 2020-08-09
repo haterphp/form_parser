@@ -1,3 +1,5 @@
+'use strict';
+
 export class Button{
     constructor(options){
 

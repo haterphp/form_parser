@@ -1,3 +1,5 @@
+'use strict';
+
 import { Field } from "./field.js";
 
 export class Reference{

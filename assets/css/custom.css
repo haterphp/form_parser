@@ -1,0 +1,15 @@
+input[type=color].form-control {
+    height: calc(2.25rem + 2px);
+}
+
+.buttons-container button{
+    margin: 5px !important;
+}
+
+.buttons-container button:first-of-type{
+    margin-left: 0 !important;
+}
+
+.references-container{
+    margin-top: 10px;
+}
