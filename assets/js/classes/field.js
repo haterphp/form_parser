@@ -1,12 +1,12 @@
 'use strict';
 
-import { StringToBool, plural } from "./utils.js";
+import { StringToBool, plural } from "../utils.js";
 
 export class Field{
     constructor(options){
         this.container = options.container;
         
-        this.id = options.id;
+        this.id = options.id ;
         this.label = options.field.label || null;
         this.input = options.field.input;
 
@@ -68,7 +68,7 @@ export class Field{
             formGroup.append(this.field);
         }
         else{
-            $(`label[for="input__${id}"]`).before(this.field);
+            formGroup.prepend(this.field)
         }
 
         if(input['mask'])

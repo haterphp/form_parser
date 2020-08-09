@@ -114,7 +114,9 @@
             "text":"Send"
         },
         {
-            "text":"Cancel"
+            "text":"Cancel",
+            "type":"Reset",
+            "className":"btn"
         }
     ]
 }

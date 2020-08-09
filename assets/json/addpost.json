@@ -53,14 +53,14 @@
       }
     },
     {
-        "text without ref":"View Author Post",
         "text":"View Author Post",
         "ref":"viewauthor"
     }
   ],
 "buttons":[
     {
-        "text":"Create Post"
+        "text":"Create Post",
+        "className":"btn btn-success"
     }
 ]
 }

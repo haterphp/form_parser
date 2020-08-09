@@ -1,7 +1,9 @@
 'use strict';
 
 import {Field} from "./field.js";
-import {capitalizeFirstLetter} from "./utils.js";
+import {capitalizeFirstLetter} from "../utils.js";
+import { Button } from "./button.js";
+import { Reference } from "./reference.js";
 
 export class Form {
     constructor(options) {
@@ -36,21 +38,46 @@ export class Form {
     }
 
     createFields(container){
-        const { fields } = this;
+        const { fields, types } = this;
         this.fieldsElements = Array.from({length: fields.length}, 
             (_, i) => new Field({
                 container,
                 field: fields[i],
                 id: i,
-                types: this.types
+                types
             }))
     }
 
-    createButtons(){
-      
+    createButtons(container){
+      const { buttons } = this;
+      this.buttonsElements = Array.from({length: buttons.length},
+            (_, i) => new Button({
+                container,
+                button: buttons[i],
+                id: i
+            }))
     }
 
-    createReferences(){}
+    createReferences(container){
+        const { references, types } = this;
+        if(references[0].input){
+            references[0].label = `<span>${references[1]['text without ref'] || ''} <a href="${references[1].ref || '/'}">${references[1].text || 'Unnamed Link'}</a></span>`;     
+            this.refElements =  new Reference({
+                container,
+                ref: references[0],
+                id: 0,
+                types
+            });
+            return true;
+        }
+        this.refElements = Array.from({length: references.length}, 
+            (_, i) => new Reference({
+                container,
+                ref: references[i],
+                id: i,
+                types
+            }))
+    }
 
     remove(){
         this.form.remove();
