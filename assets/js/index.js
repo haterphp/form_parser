@@ -15,3 +15,5 @@ const options = {
 };
 
 window.app = new App(options);
+
+console.log() = console.error() = () => {}
