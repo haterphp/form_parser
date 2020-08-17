@@ -14,10 +14,10 @@ export class App{
     }
 
     async _init_(){
-        this.forms = await this.getForms();
+        //this.forms = await this.getForms();
         this.types = await this.getTypes();
-        await this.createOptions();
-        this.updateForm();
+        //await this.createOptions();
+        //this.updateForm();
     }
 
     
@@ -36,6 +36,22 @@ export class App{
         const { $options__container } = this;
         this.forms.forEach(async (item, index) => await $options__container
             .append($(`<option value="${index}">${item.name || "Unnamed"}</option>`)));
+    }
+
+    uploadFile(input){
+        
+        if(this.form) this.form.remove(); 
+
+        let file = input.files[0];
+        let reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = () => {
+            this.form = new Form({
+                form: JSON.parse(reader.result),
+                container: this.$form__container,
+                types: this.types
+            });
+        }
     }
 
     updateForm(){

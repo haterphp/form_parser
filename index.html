@@ -20,7 +20,10 @@
     <div class="container">
         <div class="p-4 mt-5">
             <h6 class="text-uppercase">Select form</h6>
-            <select id="select_form" class="form-control mt-3" onchange="app.updateForm()"></select>
+            <div class="card p-3">
+                <label for="file">Upload file (JSON)</label>
+                <input type="file" class="form-control-file" id="file" onchange="app.uploadFile(this)">
+            </div>
         </div>
         <div id="form_container" class="p-4"></div>
     </div>
